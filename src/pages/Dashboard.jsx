@@ -8,6 +8,7 @@ import MonthSelector from '../components/MonthSelector'
 import EntryTable from '../components/EntryTable'
 import SummaryBar from '../components/SummaryBar'
 import NetChart from '../components/NetChart'
+import CategoryManager from '../components/CategoryManager'
 
 function currentMonth() {
   const now = new Date()
@@ -25,8 +26,9 @@ export default function Dashboard() {
   const { session } = useAuth()
   const userId = session.user.id
   const [month, setMonth] = useState(currentMonth())
+  const [showCategories, setShowCategories] = useState(false)
 
-  const { categories, loading: categoriesLoading } = useCategories(userId)
+  const { categories, loading: categoriesLoading, addCategory, deleteCategory } = useCategories(userId)
   const { entries, loading: entriesLoading, addEntry, updateEntry, deleteEntry } = useEntries(userId, month)
   const { summaries } = useMonthlySummaries(userId, entries.length)
 
@@ -43,11 +45,18 @@ export default function Dashboard() {
         <h1>Cashflow</h1>
         <div className="header-controls">
           <MonthSelector month={month} onChange={setMonth} />
+          <button type="button" className="signout-btn" onClick={() => setShowCategories((v) => !v)}>
+            {showCategories ? 'Hide categories' : 'Manage categories'}
+          </button>
           <button type="button" className="signout-btn" onClick={() => supabase.auth.signOut()}>
             Sign out
           </button>
         </div>
       </header>
+
+      {showCategories && (
+        <CategoryManager categories={categories} onAdd={addCategory} onDelete={deleteCategory} />
+      )}
 
       {loading ? (
         <p className="loading">Loading…</p>

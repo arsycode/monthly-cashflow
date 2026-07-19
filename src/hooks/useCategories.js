@@ -49,5 +49,11 @@ export function useCategories(userId) {
     return { data, error }
   }
 
-  return { categories, loading, addCategory }
+  async function deleteCategory(id) {
+    const { error } = await supabase.from('categories').delete().eq('id', id)
+    if (!error) setCategories((prev) => prev.filter((c) => c.id !== id))
+    return { error }
+  }
+
+  return { categories, loading, addCategory, deleteCategory }
 }
