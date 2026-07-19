@@ -1,6 +1,7 @@
 import { Bar, BarChart, CartesianGrid, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 const money = new Intl.NumberFormat('id-ID')
+const compactMoney = new Intl.NumberFormat('id-ID', { notation: 'compact', maximumFractionDigits: 1 })
 
 function monthLabel(month) {
   const [year, m] = month.split('-')
@@ -40,8 +41,8 @@ export default function NetChart({ summaries }) {
             stroke="var(--text)"
             tickLine={false}
             axisLine={false}
-            tickFormatter={(v) => money.format(v)}
-            width={70}
+            tickFormatter={(v) => compactMoney.format(v)}
+            width={56}
           />
           <ReferenceLine y={0} stroke="var(--border)" />
           <Tooltip content={<ChartTooltip />} cursor={{ fill: 'var(--accent-bg)' }} />
